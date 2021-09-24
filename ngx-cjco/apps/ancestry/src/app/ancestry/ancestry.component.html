@@ -1,0 +1,9 @@
+<mat-card>
+  <mat-card-title>
+    AncestryModel: {{ancestry?.ancestryName}}
+  </mat-card-title>
+  <mat-card-content>
+    <rest-parent *ngFor="let parent of ancestry?.parents" [ancestry]="ancestry" [parent]="parent">
+    </rest-parent>
+  </mat-card-content>
+</mat-card>

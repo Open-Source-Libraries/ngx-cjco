@@ -1,0 +1,19 @@
+<mat-card>
+  <mat-card-title>
+    Parent {{parent.id}}
+  </mat-card-title>
+  <mat-card-content>
+    <p *ngFor="let child of parent.children">
+      {{child.contact.fullName}}
+    </p>
+    <form [formGroup]="ancestryForm" class="ancestry-form" (submit)="updateName()">
+      <mat-form-field class="ancestry-full-width">
+        <input matInput placeholder="Name" formControlName="name">
+      </mat-form-field>
+      <button type="submit">Update</button>
+    </form>
+    <app-child *ngFor="let child of parent.children" [child]="child" [parent]="getParent()">
+    </app-child>
+    <p>
+  </mat-card-content>
+</mat-card>

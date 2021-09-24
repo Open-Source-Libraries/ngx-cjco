@@ -1,0 +1,85 @@
+{
+    "environments": [
+        {
+            "name": "local-mock",
+            "domain": "http://localhost:4300",
+            "versioningScheme": "header",
+            "versions": [
+                {
+                    "verb": "default",
+                    "value": "v1"
+                }
+            ],
+            "contexts": [
+                {
+                    "name": "ancestries",
+                    "domain": "http://localhost:4300",
+                    "endpoints": [
+                        {
+                            "resource": "grandchild",
+                            "url": "ancestries/:id/parents/:id/children/:id/grandchildren"
+                        }
+                    ]
+                },
+                {
+                    "name": "geography",
+                    "url": "geographies",
+                    "domain": "http://localhost:4301",
+                    "endpoints": [
+                        {
+                            "resource": "subdivision",
+                            "url": "da-hoods"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "contexts": [
+        {
+            "name": "ancestries",
+            "domain": "http://localhost:4300",
+            "endpoints": [
+                {
+                    "resource": "ancestry",
+                    "url": "ancestries",
+                    "versioningScheme": "header"
+                },
+                {
+                    "resource": "parent",
+                    "url": "ancestries/:id/parents"
+                },
+                {
+                    "resource": "child",
+                    "url": "ancestries/:id/parents/:id/children"
+                },
+                {
+                    "resource": "grandchild",
+                    "url": "blah-foo-blah"
+                }
+            ]
+        },
+        {
+            "name": "geography",
+            "domain": "http://localhost:4301",
+            "endpoints": [
+                {
+                    "resource": "country",
+                    "url": "countries"
+                },
+                {
+                    "resource": "state",
+                    "url": "states"
+                },
+                {
+                    "resource": "city",
+                    "url": "cities"
+                },
+                {
+                    "resource": "subdivision",
+                    "url": "neighborhoods"
+                }
+            ]
+        }
+    ]
+}
