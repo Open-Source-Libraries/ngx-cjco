@@ -1,6 +1,6 @@
 import { Grandchild } from './grandchild.model';
 import { Contact } from './contact.model';
-import { resource, RestResource } from '@rest/rest';
+import { resource, RestResource } from '@ngx-cjco/ngx-rest';
 
 @resource('child')
 export class Child extends RestResource<Child> {

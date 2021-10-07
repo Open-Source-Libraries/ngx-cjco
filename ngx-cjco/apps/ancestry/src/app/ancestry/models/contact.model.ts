@@ -1,4 +1,4 @@
-import { resource, RestResource } from '@rest/rest';
+import { resource, RestResource } from '@ngx-cjco/ngx-rest';
 
 @resource('contact')
 export class Contact extends RestResource<Contact> {

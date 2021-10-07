@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { Parent } from '../models/parent.model';
-import { RestResourceService } from '@rest/rest';
+import { RestResourceService } from '@ngx-cjco/ngx-rest';
 
 @Injectable({
   providedIn: 'root'
