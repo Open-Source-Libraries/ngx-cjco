@@ -14,11 +14,11 @@ export { RestServiceOptions };
     ResourceUrlService
   ]
 })
-export class NgxRestModule {
-  public static forRoot(restModuleOptions: RestModuleOptions): ModuleWithProviders<NgxRestModule> {
+export class RestModule {
+  public static forRoot(restModuleOptions: RestModuleOptions): ModuleWithProviders<RestModule> {
     // resourceConfig.resourceEnvironment = resourceEnvironment;
     return ({
-      ngModule: NgxRestModule,
+      ngModule: RestModule,
       providers: [
         {
           provide: FOR_ROOT_REST_MODULE_OPTIONS_TOKEN,

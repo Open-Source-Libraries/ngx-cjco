@@ -4,7 +4,7 @@
 // import { RestVerb } from '../../enums/rest-resource-verbs.enum';
 //
 // @Injectable({
-//   providedIn: NgxRestModule
+//   providedIn: RestModule
 // })
 // export class HttpCodeMessageService {
 //   private httpCodeMessageConfig : HttpCodeMessageConfig;

@@ -4,11 +4,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { RestModule } from '@rest/rest';
 import * as EndpointsFile from '../assets/config/resource-endpoints.json';
 import { CoreModule } from './core/core.module';
 import { environment } from '../environments/environment';
-import { RestResourceConfig } from '@rest/rest';
+import { RestModule, RestResourceConfig } from '@ngx-cjco/ngx-rest';
 
 @NgModule({
   declarations: [

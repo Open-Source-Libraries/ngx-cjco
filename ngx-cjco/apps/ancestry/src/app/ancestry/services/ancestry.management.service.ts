@@ -8,8 +8,7 @@ import { AncestryService } from './ancestry.service';
 import { ChildService } from './child.service';
 import { GrandchildService } from './grandchild.service';
 import { ParentService } from './parent.service';
-import { RestRequestOptions } from '@rest/rest';
-import { map } from 'rxjs/operators';
+import { RestRequestOptions } from '@ngx-cjco/ngx-rest';
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
 import { Parent } from './parent.model';
-import { resource, RestResource } from '@rest/rest';
+import { resource, RestResource } from '@ngx-cjco/ngx-rest';
 
 @resource('ancestry')
 export class Ancestry extends RestResource<Ancestry> {
