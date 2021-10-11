@@ -8,7 +8,7 @@
       <span>Toppings</span>
       <span>Driver</span>
     </div>
-    <app-delivered-orders-item *ngFor="let order of orders$ | async" [order]="order">
-    </app-delivered-orders-item>
+    <rest-delivered-orders-item *ngFor="let order of orders$ | async" [order]="order">
+    </rest-delivered-orders-item>
   </mat-card-content>
 </mat-card>

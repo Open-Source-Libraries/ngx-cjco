@@ -43,5 +43,8 @@ import { DeliveredOrdersItemComponent } from './delivered-orders-item/delivered-
     MatInputModule,
     MatButtonModule
   ],
+  exports: [
+    PizzaLogisticsComponent
+  ]
 })
 export class PizzaLogisticsModule { }

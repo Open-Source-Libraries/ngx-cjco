@@ -3,12 +3,12 @@ import { PizzaLogisticsService } from '../../core/services/pizza-logistics/pizza
 import { PizzaOrder } from '../../shared/models/pizza-order.model';
 
 @Component({
-  selector: 'app-delivered-orders-item',
+  selector: 'rest-delivered-orders-item',
   templateUrl: './delivered-orders-item.component.html',
   styleUrls: ['./delivered-orders-item.component.scss']
 })
 export class DeliveredOrdersItemComponent {
-  @Input() order: PizzaOrder;
+  @Input() order!: PizzaOrder;
 
   constructor(private pizzaLogisticsService: PizzaLogisticsService) { }
 
@@ -34,7 +34,11 @@ export class DeliveredOrdersItemComponent {
   }
 
   public get driver(): string {
-    const driver = this.pizzaLogisticsService.getDriverById(this.order.driverId);
+    let driver;
+
+    if (this.order.driverId) {
+      driver = this.pizzaLogisticsService.getDriverById(this.order.driverId);
+    }
 
     if (!driver) {
       return '';

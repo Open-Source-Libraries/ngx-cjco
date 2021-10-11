@@ -8,15 +8,15 @@ import { PizzaSize } from '../../shared/models/pizza-size.model';
 import { PizzaTopping } from '../../shared/models/pizza.topping';
 
 @Component({
-  selector: 'app-new-order',
+  selector: 'rest-new-order',
   templateUrl: './new-order.component.html',
   styleUrls: ['./new-order.component.scss']
 })
 export class NewOrderComponent implements OnInit, OnDestroy {
-  @Input() toppings$: Observable<PizzaTopping[]>;
-  @Input() sizes$: Observable<PizzaSize[]>;
+  @Input() toppings$!: Observable<PizzaTopping[]>;
+  @Input() sizes$!: Observable<PizzaSize[]>;
 
-  public formGroup: FormGroup;
+  public formGroup!: FormGroup;
   public sizes: PizzaSize[] = [];
   public pizzaToppings: PizzaTopping[] = [];
 

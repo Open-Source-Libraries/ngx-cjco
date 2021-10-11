@@ -23,9 +23,9 @@ $pizza-pie-palette-lighter: 100;
 $pizza-pie-palette-darker: 800;
 $pizza-pie-palette-text-default: 600;
 
-$pizza-pie-app-primary: mat.define-palette($pizza-pie-palette-blue, $pizza-pie-palette-default, $pizza-pie-palette-lighter, $pizza-pie-palette-darker, $pizza-pie-palette-text-default);
-$pizza-pie-app-accent:  mat.define-palette($pizza-pie-palette-grey, $pizza-pie-palette-default, $pizza-pie-palette-lighter, $pizza-pie-palette-darker, $pizza-pie-palette-text-default);
-$pizza-pie-app-warn:    mat.define-palette((mat.$orange-palette));
+$pizza-pie-rest-primary: mat.define-palette($pizza-pie-palette-blue, $pizza-pie-palette-default, $pizza-pie-palette-lighter, $pizza-pie-palette-darker, $pizza-pie-palette-text-default);
+$pizza-pie-rest-accent:  mat.define-palette($pizza-pie-palette-grey, $pizza-pie-palette-default, $pizza-pie-palette-lighter, $pizza-pie-palette-darker, $pizza-pie-palette-text-default);
+$pizza-pie-rest-warn:    mat.define-palette((mat.$orange-palette));
 
 @function pizza-pie-theme($primary, $accent, $warn: mat.define-palette(mat.$red-palette)) {
   $pizza-pie-light-theme-foreground: (
@@ -48,7 +48,7 @@ $pizza-pie-app-warn:    mat.define-palette((mat.$orange-palette));
 
   $pizza-pie-light-theme-background: (
           status-bar: map_get($pizza-pie-palette-grey, 200),
-          app-bar:    map_get($pizza-pie-palette-grey, 100),
+          rest-bar:    map_get($pizza-pie-palette-grey, 100),
           background: map_get($pizza-pie-palette-grey, 50),
           hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
           card:       white,
@@ -73,7 +73,7 @@ $pizza-pie-app-warn:    mat.define-palette((mat.$orange-palette));
   );
 }
 
-@mixin pizza-pie-app-theme-creator($theme) {
+@mixin pizza-pie-rest-theme-creator($theme) {
   // Include theme styles for core and each component used in your app.
   // Alternatively, you can import and @include the theme mixins for each component
   // that you are using.
@@ -87,13 +87,13 @@ $pizza-pie-app-warn:    mat.define-palette((mat.$orange-palette));
   @include form-field-alterations($theme);
 }
 
-@mixin pizza-pie-app-typography($config) {
+@mixin pizza-pie-rest-typography($config) {
   @include pizza-pie-table-typography($config);
   @include pizza-pie-form-field-typography($config);
 }
 
 // Create the theme object (a Sass map containing all of the palettes).
-$pizza-pie-app-theme: pizza-pie-theme($pizza-pie-app-primary, $pizza-pie-app-accent, $pizza-pie-app-warn);
-@include pizza-pie-app-theme-creator($pizza-pie-app-theme);
+$pizza-pie-rest-theme: pizza-pie-theme($pizza-pie-rest-primary, $pizza-pie-rest-accent, $pizza-pie-rest-warn);
+@include pizza-pie-rest-theme-creator($pizza-pie-rest-theme);
 
-@include pizza-pie-app-typography($typography-config);
+@include pizza-pie-rest-typography($typography-config);

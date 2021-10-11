@@ -5,13 +5,13 @@ import { PizzaOrder } from '../../shared/models/pizza-order.model';
 import { PizzaTopping } from '../../shared/models/pizza.topping';
 
 @Component({
-  selector: 'app-open-orders-item',
+  selector: 'rest-open-orders-item',
   templateUrl: './open-orders-item.component.html',
   styleUrls: ['./open-orders-item.component.scss']
 })
 export class OpenOrdersItemComponent {
-  @Input() order: PizzaOrder;
-  @Input() toppings: PizzaTopping[];
+  @Input() order!: PizzaOrder;
+  @Input() toppings!: PizzaTopping[] | null;
 
   private subscriptions = new Subscription();
 
@@ -40,7 +40,11 @@ export class OpenOrdersItemComponent {
       : '';
   }
 
-  private getToppingName(id: number): string {
+  private getToppingName(id: number): string | undefined {
+    if (!this.toppings) {
+      return undefined;
+    }
+
     const topping = this.toppings.find(x => x.id === id);
     return topping !== undefined
       ? topping.name

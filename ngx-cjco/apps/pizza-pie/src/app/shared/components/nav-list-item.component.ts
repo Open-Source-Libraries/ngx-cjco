@@ -3,12 +3,12 @@ import {Router} from '@angular/router';
 import { NavItem } from '../models/nav-item.model';
 
 @Component({
-  selector: 'app-nav-list-item',
+  selector: 'rest-nav-list-item',
   templateUrl: './nav-list-item.component.html',
   styleUrls: ['./nav-list-item.component.scss']
 })
 export class NavListItemComponent implements OnInit {
-  @Input() item: NavItem;
+  @Input() item!: NavItem;
 
   constructor(public router: Router) {
   }

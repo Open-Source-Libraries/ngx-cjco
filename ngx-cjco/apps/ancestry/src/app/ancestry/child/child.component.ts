@@ -5,7 +5,7 @@ import { Parent } from '../models/parent.model';
 import { AncestryManagementService } from '../services/ancestry.management.service';
 
 @Component({
-  selector: 'app-child',
+  selector: 'rest-child',
   templateUrl: './child.component.html',
   styleUrls: ['./child.component.scss']
 })

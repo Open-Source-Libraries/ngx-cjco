@@ -12,8 +12,8 @@
       </mat-form-field>
       <button type="submit">Update</button>
     </form>
-    <app-child *ngFor="let child of parent.children" [child]="child" [parent]="getParent()">
-    </app-child>
+    <rest-child *ngFor="let child of parent.children" [child]="child" [parent]="getParent()">
+    </rest-child>
     <p>
   </mat-card-content>
 </mat-card>

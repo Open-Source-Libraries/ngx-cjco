@@ -4,11 +4,11 @@ import { PizzaOrder } from '../../shared/models/pizza-order.model';
 import { PizzaTopping } from '../../shared/models/pizza.topping';
 
 @Component({
-  selector: 'app-open-orders',
+  selector: 'rest-open-orders',
   templateUrl: './open-orders.component.html',
   styleUrls: ['./open-orders.component.scss']
 })
 export class OpenOrdersComponent {
-  @Input() orders$: Observable<PizzaOrder[]>;
-  @Input() toppings$: Observable<PizzaTopping[]>;
+  @Input() orders$!: Observable<PizzaOrder[]>;
+  @Input() toppings$!: Observable<PizzaTopping[]>;
 }

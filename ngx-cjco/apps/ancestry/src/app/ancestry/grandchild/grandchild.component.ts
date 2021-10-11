@@ -4,7 +4,7 @@ import { Grandchild } from '../models/grandchild.model';
 import { AncestryManagementService } from '../services/ancestry.management.service';
 
 @Component({
-  selector: 'app-grandchild',
+  selector: 'rest-grandchild',
   templateUrl: './grandchild.component.html',
   styleUrls: ['./grandchild.component.scss']
 })

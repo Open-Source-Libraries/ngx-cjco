@@ -1,8 +1,8 @@
-app-ready-for-delivery-item {
+rest-ready-for-delivery-item {
   flex: 1 100%;
 }
 
-app-ready-for-delivery-item:not(:first-child) {
+rest-ready-for-delivery-item:not(:first-child) {
   margin-top: 1em;
 }
 

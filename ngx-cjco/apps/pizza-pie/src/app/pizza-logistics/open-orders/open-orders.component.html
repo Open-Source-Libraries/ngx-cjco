@@ -7,6 +7,6 @@
       <span>Order Number</span>
       <span>Toppings</span>
     </div>
-    <app-open-orders-item *ngFor="let order of orders$ | async" [order]="order" [toppings]="toppings$ | async"></app-open-orders-item>
+    <rest-open-orders-item *ngFor="let order of orders$ | async" [order]="order" [toppings]="toppings$ | async"></rest-open-orders-item>
   </mat-card-content>
 </mat-card>

@@ -5,7 +5,7 @@ import { PizzaState } from '../../shared/enums/pizza-state.enum';
 import { NavItem } from '../../shared/models/nav-item.model';
 
 @Component({
-  selector: 'app-pizza-dashboard',
+  selector: 'rest-pizza-dashboard',
   templateUrl: './pizza-dashboard.component.html',
   styleUrls: ['./pizza-dashboard.component.scss']
 })

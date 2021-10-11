@@ -11,7 +11,7 @@
 </mat-toolbar>
 <mat-drawer-container>
   <mat-drawer mode="side" opened>
-    <app-nav-list-item *ngFor="let item of navItems" [item]="item"></app-nav-list-item>
+    <rest-nav-list-item *ngFor="let item of navItems" [item]="item"></rest-nav-list-item>
   </mat-drawer>
   <mat-drawer-content>
     <router-outlet></router-outlet>

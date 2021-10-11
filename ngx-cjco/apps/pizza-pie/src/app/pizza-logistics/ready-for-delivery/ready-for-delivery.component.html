@@ -7,8 +7,8 @@
       <span>Order Number</span>
       <span>Driver</span>
     </div>
-    <app-ready-for-delivery-item *ngFor="let pizzaOrder of orders$ | async" [order]="pizzaOrder"
+    <rest-ready-for-delivery-item *ngFor="let pizzaOrder of orders$ | async" [order]="pizzaOrder"
                                  [availableDrivers$]="availableDrivers$">
-    </app-ready-for-delivery-item>
+    </rest-ready-for-delivery-item>
   </mat-card-content>
 </mat-card>

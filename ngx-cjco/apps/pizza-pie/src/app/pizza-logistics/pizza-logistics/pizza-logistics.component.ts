@@ -8,7 +8,7 @@ import { PizzaOrder } from '../../shared/models/pizza-order.model';
 import { PizzaTopping } from '../../shared/models/pizza.topping';
 
 @Component({
-  selector: 'app-pizza-logistics',
+  selector: 'rest-pizza-logistics',
   templateUrl: './pizza-logistics.component.html',
   styleUrls: ['./pizza-logistics.component.scss']
 })
