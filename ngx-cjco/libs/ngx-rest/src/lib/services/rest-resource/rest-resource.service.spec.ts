@@ -44,10 +44,32 @@ import {
       return result;
     }
   }
+
+  class FakeNoResource extends RestResource<FakeNoResource> {
+    public id = 123;
+    public name = "";
+    public data = "";
+  
+    public fromJson(json: Fake | Fake[]): Fake | Fake[] {
+      if (Array.isArray(json)) {
+        return json.map(this.fromJson) as Fake[];
+      }
+  
+      const result = new FakeNoResource();
+      Object.assign(result, json);
+      return result;
+    }
+  }
   
   export class FakeRestService extends RestResourceService<Fake> {
     constructor(injector: Injector) {
       super(Fake, injector);
+    }
+  }
+
+  export class FakeRestServiceNoResource extends RestResourceService<FakeNoResource> {
+    constructor(injector: Injector) {
+      super(FakeNoResource, injector);
     }
   }
   
@@ -78,6 +100,13 @@ import {
     it('should be created', () => {
       expect(service).toBeTruthy();
     });
+
+    describe('when constructor is called', () => {
+      it('should fail when no resoucre name is provided', () => {
+        const fakeResource = new FakeNoResource();
+        expect(() => {new FakeRestServiceNoResource(TestBed)}).toThrow(Error);
+      })
+    })
   
     describe('when the service is called', () => {
       it('should make a GET request when the list method is invoked', () => {
@@ -159,7 +188,7 @@ import {
         fakeResponse.flush({});
       });
   
-      /*it('should append the query params from options', () => {
+      it('should append the query params from options', () => {
         const options : RestRequestOptions<Fake> = {
           queryParams : {
             name: "fakeName"
@@ -177,7 +206,7 @@ import {
   
         expect(fakeResponse.request.method).toBe(RestVerb.Get);
         fakeResponse.flush({});
-      });*/
+      });
     });
   });
   
