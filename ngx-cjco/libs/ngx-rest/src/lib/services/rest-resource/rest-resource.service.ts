@@ -48,21 +48,21 @@ export abstract class RestResourceService<
   }
 
   public read(id?: IdType, options?: RestRequestOptions<T>): Observable<T | T[]> {
-    const preparedUrl = this.prepareUrl(options);
-    // this.resourceInstance = new this.type() as T;
+    const preparedUrl = this.prepareUrl(id, options);
+    this.resourceInstance = new this.type() as T;
 
-    // if (this.resourceInstance === undefined) {
-    //   return of();
-    // }
+    if (this.resourceInstance === undefined) {
+      return of();
+    }
 
     // TODO: Take into account the different versioning schemes.
-    return this.httpClient.get<T>(`${preparedUrl}/${id}`).pipe(
+    return this.httpClient.get<T>(preparedUrl).pipe(
         map((data: T) => new this.type().fromJson(data))
     );
   }
 
   public list(options?: RestRequestOptions<T>): Observable<T | T[]> {
-    const preparedUrl = this.prepareUrl(options);
+    const preparedUrl = this.prepareUrl(void 0, options);
 
     // TODO: Take into account the different versioning schemes.
     return this.httpClient.get<T>(preparedUrl).pipe(
@@ -71,7 +71,7 @@ export abstract class RestResourceService<
   }
 
   public create(item: T, options?: RestRequestOptions<T>): Observable<T | T[]> {
-    const preparedUrl = this.prepareUrl(options);
+    const preparedUrl = this.prepareUrl(void 0, options);
 
     return this.httpClient.post<T>(preparedUrl, item).pipe(
       map((data: T) => new this.type().fromJson(data))
@@ -79,41 +79,40 @@ export abstract class RestResourceService<
   }
 
   public update(item: T, options?: RestRequestOptions<T>): Observable<T | T[]> {
-    const preparedUrl = `${this.prepareUrl(options)}/${item.id}`;
-    console.table([preparedUrl, item]);
+    const preparedUrl = this.prepareUrl(item.id, options);
     return this.httpClient.put<T>(preparedUrl, item).pipe(
       map((data: T) => new this.type().fromJson(data))
     );
   }
 
   public delete(item: T, options?: RestRequestOptions<T>): Observable<T> {
-    const preparedUrl = `${this.prepareUrl(options)}/${item.id}`;
+    const preparedUrl = this.prepareUrl(item.id, options);
     return this.httpClient.delete<T>(preparedUrl);
   }
 
-  private prepareUrl(options?: RestRequestOptions<T>): string {
-    let preparedUrl = this.endpointConfig.url.slice();
+  private prepareUrl(id?: IdType, options?: RestRequestOptions<T>): string {
+    let preparedUrl = `${this.endpointConfig.url.slice()}${id !== undefined ? `/${id}` : ''}`;
 
     if (options?.namedIdentifierParams
         && this.endpointConfig.identifierScheme === RestIdentifierScheme.Named) {
-      preparedUrl = this.prepareUrlNamedIdentifiers(options.namedIdentifierParams);
+      preparedUrl = this.prepareUrlNamedIdentifiers(preparedUrl, options.namedIdentifierParams);
     }
     else if(options?.identifierParams
             && this.endpointConfig.identifierScheme === RestIdentifierScheme.Array) {
-      preparedUrl = this.prepareUrlIdentifiers(options.identifierParams);
+      preparedUrl = this.prepareUrlIdentifiers(preparedUrl, options.identifierParams);
     }
 
     if (options?.queryParams) {
-      preparedUrl = `${preparedUrl}${this.prepareUrlParams(options?.queryParams)}`;
+      preparedUrl = this.prepareUrlParams(preparedUrl, options?.queryParams);
     }
 
     return preparedUrl;
   }
 
-  private prepareUrlIdentifiers(identifiers: string[] | number[]): string {
+  private prepareUrlIdentifiers(preparedUrl:string, identifiers: string[] | number[]): string {
     let url = '';
     const urlIdentifiers = [...identifiers];
-    this.endpointConfig.url.split('/').forEach(((s: string) => {
+    preparedUrl.split('/').forEach(((s: string) => {
       if (s.search(':id') !== -1) {
         const identifier = urlIdentifiers.shift();
 
@@ -130,36 +129,34 @@ export abstract class RestResourceService<
     return url.slice(0, -1);
   }
 
-  private prepareUrlNamedIdentifiers(identifiers: { [param: string]: string | number }): string {
-    const endpointUrl = this.endpointConfig.url.slice();
+  private prepareUrlNamedIdentifiers(preparedUrl:string, identifiers: { [param: string]: string | number }): string {
     for (const index in identifiers) {
-      if (endpointUrl.search(index) === -1) {
+      if (preparedUrl.search(index) === -1) {
         throw new Error (`Identifier ${index} not found in URL `);
       }
 
       const value = `${identifiers[index]}`;
-      endpointUrl.replace(index, value);
+      preparedUrl.replace(index, value);
     }
 
-    return endpointUrl;
+    return preparedUrl;
   }
 
   private prepareUrlParams(
+    preparedUrl: string,
     queryParams?: {
       [param: string]: string | string[] | number | number[];
     }): string {
 
-    let endpointUrl = this.endpointConfig.url.slice();
-
-    if (endpointUrl.endsWith('/')) {
+    if (preparedUrl.endsWith('/')) {
       throw new Error("Remove trailing slash from endpoint URL in configuration file");
     }
 
     if (!queryParams) {
-      return endpointUrl;
+      return preparedUrl;
     }
 
-    endpointUrl += '?';
+    preparedUrl += '?';
     for (const urlParamsKey in queryParams) {
       if (Array.isArray(queryParams[urlParamsKey])
          && (queryParams[urlParamsKey] as Array<string>).length > 0) {
@@ -168,10 +165,10 @@ export abstract class RestResourceService<
        paramValue.trimEnd();
       }
       else {
-        endpointUrl += `${urlParamsKey}=${queryParams[urlParamsKey]}&`;
+        preparedUrl += `${urlParamsKey}=${queryParams[urlParamsKey]}`;
       }
     }
 
-    return endpointUrl;
+    return preparedUrl;
   }
 }
