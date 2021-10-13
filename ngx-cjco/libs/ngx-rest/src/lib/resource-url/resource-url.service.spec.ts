@@ -1,75 +1,89 @@
-// import { environment } from '../../../../environments/environment';
-// import { HttpVerb } from './enums/rest-resource-verbs.enum';
-// import { TestBed } from '@angular/core/testing';
-// import { ResourceUrlService } from './resource-url.service';
-// import { ResourceConfig } from './models/resource-config.model';
-// import { HttpClientModule } from '@angular/common/rest-resource';
-// import { HttpClientTestingModule } from '@angular/common/rest-resource/testing';
-// import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RestVerb } from '../enums/rest-verbs.enum';
+import { TestBed } from '@angular/core/testing';
+import { ResourceUrlService } from './resource-url.service';
+import { RestServiceOptions } from '../rest-service-options.model';
+import { RestResourceConfig } from './models/rest-resource-config.model';
+import { RestVersioningScheme } from './enums/rest-versioning-scheme.enum';
 
-// describe('ResourceUrlService', () => {
-//   const endpointConfig: ResourceConfig = require('../../../../assets/mocks/config/resources-endpoints.json');
-//   const resources = JSON.stringify(endpointConfig);
-//   const BaseUri = 'http://localhost/api';
-//   let sut: ResourceUrlService;
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       imports: [HttpClientModule, HttpClientTestingModule, Router],
-//       providers: [ResourceUrlService, Router]
-//     });
-//     sut = TestBed.get(ResourceUrlService);
-//     sut.config = resources;
-//   });
+class FakeResourceUrlService extends ResourceUrlService {
+    constructor(options: RestServiceOptions) {
+        super(options);
+    }
+}
 
-//   describe('when retrieving a configuration URI for environment local-dev', () => {
-//     it('should return the specific version for a given verb if defined', () => {
-//       environment.resourceEnvironment = 'local-dev';
+describe('ResourceUrlService', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const endpointConfig: RestResourceConfig = require('../../assets/mocks/default-restResourceConfig.json');
+  const resourceEnvironment = "local-dev";
+  let sut: ResourceUrlService;
+  beforeEach(() => {
+    sut = new FakeResourceUrlService({restResourceConfig: endpointConfig, resourceEnvironment: resourceEnvironment});
+  });
 
-//       const resultUri = sut.resourceUrl('ResourceOne', HttpVerb.GET);
+  it('should be created', () => {
+    expect(sut).toBeTruthy();
+  });
 
-//       expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
-//     });
+  it('should fail when resourceEnvironment is invalid', () => {
+    expect(() => {
+      new FakeResourceUrlService({
+        restResourceConfig: endpointConfig,
+        resourceEnvironment: "non-existent"
+      })
+    }).toThrow("Environment is undefined for local-dev");
+  });
 
-//     it('should return the default version for a given verb if undefined', () => {
-//       environment.resourceEnvironment = 'local-dev';
+  /*describe('when retrieving a configuration URI for environment local-dev', () => {
+    xit('should return the specific version for a given verb if defined', () => {
+      //environment.resourceEnvironment = 'local-dev';
 
-//       const resultUri = sut.resourceUrl('ResourceOne', HttpVerb.POST);
+      //const resultUri = sut.resourceUrl('ResourceOne', RestVerb.Get);
+      //const resultUri = 'sut.resourceUrl('ResourceOne', RestVerb.Get);'
 
-//       expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
-//     });
+      //expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
+    });
 
-//     it('should return undefined for the URI if the configuration is incorrect', () => {
-//       environment.resourceEnvironment = 'local-dev';
+    xit('should return the default version for a given verb if undefined', () => {
+      //environment.resourceEnvironment = 'local-dev';
 
-//       const resultUri = sut.resourceUrl('Something', HttpVerb.GET);
+      //const resultUri = sut.resourceUrl('ResourceOne', RestVerb.Post);
 
-//       expect(resultUri).toEqual(undefined);
-//     });
-//   });
+      //expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
+    });
 
-//   describe('when retrieving a configuration URI for environment local-mock', () => {
-//     it('should return the specific version for a given verb if defined', () => {
-//       environment.resourceEnvironment = 'local-mock';
+    xit('should return undefined for the URI if the configuration is incorrect', () => {
+      //environment.resourceEnvironment = 'local-dev';
 
-//       const resultUri = sut.resourceUrl('ResourceOne', HttpVerb.GET);
+      //const resultUri = sut.resourceUrl('Something', RestVerb.Get);
 
-//       expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
-//     });
+      //expect(resultUri).toEqual(undefined);
+    });
+  });
 
-//     it('should return the default version for a given verb if undefined', () => {
-//       environment.resourceEnvironment = 'local-mock';
+  describe('when retrieving a configuration URI for environment local-mock', () => {
+    xit('should return the specific version for a given verb if defined', () => {
+      //environment.resourceEnvironment = 'local-mock';
 
-//       const resultUri = sut.resourceUrl('ResourceOne', HttpVerb.POST);
+      ////const resultUri = sut.resourceUrl('ResourceOne', RestVerb.Get);
 
-//       expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
-//     });
+      //expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
+    });
 
-//     it('should return undefined for the URI if the configuration is incorrect', () => {
-//       environment.resourceEnvironment = 'local-mock';
+    xit('should return the default version for a given verb if undefined', () => {
+      //environment.resourceEnvironment = 'local-mock';
 
-//       const resultUri = sut.resourceUrl('Something', HttpVerb.GET);
+      //const resultUri = sut.resourceUrl('ResourceOne', RestVerb.Post);
 
-//       expect(resultUri).toEqual(undefined);
-//     });
-//   });
-// });
+      //expect(resultUri.endpoint).toEqual(`${BaseUri}/ones`);
+    });
+
+    xit('should return undefined for the URI if the configuration is incorrect', () => {
+     // environment.resourceEnvironment = 'local-mock';
+
+     /// const resultUri = sut.resourceUrl('Something', RestVerb.Get);
+
+      //expect(resultUri).toEqual(undefined);
+    });
+  });*/
+});
