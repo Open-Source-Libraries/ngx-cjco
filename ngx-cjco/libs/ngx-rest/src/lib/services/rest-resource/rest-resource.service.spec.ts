@@ -14,6 +14,7 @@ import {
   import { RestResourceEndpoint } from '../../resource-url/models/rest-resource-endpoint.model';
   import { RestRequestOptions } from './interfaces';
   import { RestIdentifierScheme } from '../../resource-url/enums/rest-identifier-scheme.enum';
+  import { RestResourceVersion } from '../../resource-url/models/rest-resource-version.model';
   
   class MockResourceUrlService {
     public resourceUrl(resources: string, verb: RestVerb): string {
@@ -38,6 +39,21 @@ import {
       endpoint.resource = 'fake';
       endpoint.url = 'http://test-service.com/fake/name';
       endpoint.identifierScheme = RestIdentifierScheme.Named;
+      return endpoint;
+    }
+  }
+
+  class MockResourceUrlServiceArray {
+    public resourceUrl(resources: string, verb: RestVerb): string {
+      return 'http://test-service.com';
+    }
+  
+    public getEndpoint(resource: string): RestResourceEndpoint {
+      const endpoint = new RestResourceEndpoint();
+      endpoint.resource = 'fake';
+      endpoint.url = 'http://test-service.com/fake/:id';
+      endpoint.identifierScheme = RestIdentifierScheme.Array;
+      endpoint.versions = [{verb: 'GET', value: '1.1'}];
       return endpoint;
     }
   }
@@ -91,7 +107,6 @@ import {
     let httpMock: HttpTestingController;
     //let resourceServiceMock: ResourceUrlService;
     let service: FakeRestService;
-    //let clients: HttpClient;
     const fakeResource = new Fake();
   
     beforeEach(() => {
@@ -103,7 +118,6 @@ import {
       });
       httpMock = TestBed.inject(HttpTestingController);
       //resourceServiceMock = TestBed.inject(ResourceUrlService);
-      //clients = TestBed.inject(HttpClient);
       service = new FakeRestService(TestBed);
     });
   
@@ -207,7 +221,6 @@ import {
           queryParams : {
             name: "fakeName"
           },
-          //identifierParams : [123],
         };
   
         service.read(123, options).subscribe(response => {
@@ -223,7 +236,6 @@ import {
       });
 
       //New Tests
-
       it('should fail when trailing slash in URL', () => {
         const options : RestRequestOptions<Fake> = {
           queryParams : {
@@ -234,48 +246,118 @@ import {
         expect(() => {service.read('123/', options).subscribe()}).toThrow(Error);
       });
 
-      //Need to override provider to test this
-      describe('named identifier', () => {
+      it('should append the query params Array from options', () => {
+        const options : RestRequestOptions<Fake> = {
+          queryParams : {
+            name: ['fakeName', 'fakeName2']
+          },
+        };
 
-         TestBed.overrideProvider(ResourceUrlService, {useValue: MockResourceUrlServiceNamed});
-        // service = new FakeRestService(TestBed);
-        // resourceServiceMock = TestBed.inject(ResourceUrlService);
-
-        it('should append the identifier params for named identifier from options', () => {
-          const options : RestRequestOptions<Fake> = {
-            namedIdentifierParams: {
-              name: "fakeName"
-            }
-          };
-
-          service.list(options).subscribe(response => {
-            expect(response).toBeTruthy();
-          });
-
-          const fakeResponse = httpMock.expectOne(`http://test-service.com/fake/fakeName`);
-  
-          expect(fakeResponse.request.method).toBe(RestVerb.Get);
-          fakeResponse.flush({});
+        service.list(options).subscribe(response => {
+          expect(response).toBeTruthy();
         });
-      })
-
-      //Need to create another mock URL service to test this and override providers methods
-      describe('identifier param', () => {
-       it('should append the identifier params for Array identifier from options', () => {
-         const options : RestRequestOptions<Fake> = {
-           identifierParams: ['id']
-         };
-
-         service.list(options).subscribe(response => {
-           expect(response).toBeTruthy();
-         });
-
-         const fakeResponse = httpMock.expectOne(`http://test-service.com/fake/id`);
- 
-         expect(fakeResponse.request.method).toBe(RestVerb.Get);
-         fakeResponse.flush({});
-       });
-     })
+  
+        const fakeResponse = httpMock.expectOne(
+          `http://test-service.com/fake?name=fakeName,fakeName2`
+        );
+  
+        expect(fakeResponse.request.method).toBe(RestVerb.Get);
+        fakeResponse.flush({});
+      });
     });
+
   });
+
+      //Need Describes for named identifier
+  describe('named identifier', () => {
+
+    let httpMock: HttpTestingController;
+    let resourceServiceNamedMock: ResourceUrlService;
+    let service: FakeRestService;
+    const fakeResource = new Fake();
+  
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientModule, HttpClientTestingModule],
+        providers: [
+          { provide: ResourceUrlService, useClass: MockResourceUrlServiceNamed },
+        ],
+      });
+      httpMock = TestBed.inject(HttpTestingController);
+      resourceServiceNamedMock = TestBed.inject(ResourceUrlService);
+      service = new FakeRestService(TestBed);
+    });
+
+    it('should append the identifier params for named identifier from options', () => {
+      const options : RestRequestOptions<Fake> = {
+        namedIdentifierParams: {
+          name: "fakeName"
+        }
+      };
+
+      service.list(options).subscribe(response => {
+        expect(response).toBeTruthy();
+      });
+
+      const fakeResponse = httpMock.expectOne(`http://test-service.com/fake/fakeName`);
+
+      expect(fakeResponse.request.method).toBe(RestVerb.Get);
+      fakeResponse.flush({});
+    });
+
+    it('should through error when identifier params for Named is not found', () => {
+      const options : RestRequestOptions<Fake> = {
+        namedIdentifierParams : {
+          game: "test"
+        },
+      };
+
+      expect(() => {service.list(options).subscribe()}).toThrow(Error);
+    });
+
+  })
+
+  //Need describe for Array identifier
+  describe('identifier param', () => {
+
+    let httpMock: HttpTestingController;
+    let resourceServiceArrayMock: ResourceUrlService;
+    let service: FakeRestService;
+    const fakeResource = new Fake();
+  
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientModule, HttpClientTestingModule],
+        providers: [
+          { provide: ResourceUrlService, useClass: MockResourceUrlServiceArray },
+        ],
+      });
+      httpMock = TestBed.inject(HttpTestingController);
+      resourceServiceArrayMock = TestBed.inject(ResourceUrlService);
+      service = new FakeRestService(TestBed);
+    });
+
+    it('should append the identifier params for Array identifier from options', () => {
+      const options : RestRequestOptions<Fake> = {
+        identifierParams: ['id']
+      };
+
+      service.list(options).subscribe(response => {
+        expect(response).toBeTruthy();
+      });
+
+      const fakeResponse = httpMock.expectOne(`http://test-service.com/fake/id`);
+
+      expect(fakeResponse.request.method).toBe(RestVerb.Get);
+      fakeResponse.flush({});
+    });
+
+    it('should through error when identifier params for Array is undefined', () => {
+      const options : RestRequestOptions<Fake> = {
+        identifierParams : []
+      };
+
+      expect(() => {service.list(options).subscribe()}).toThrow(Error);
+    });
+  })
   

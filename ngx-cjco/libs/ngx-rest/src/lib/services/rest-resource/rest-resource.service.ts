@@ -163,6 +163,7 @@ export abstract class RestResourceService<
        const paramValue = (queryParams[urlParamsKey] as Array<string>)
         .reduce((prev: string | number, curr: string | number) => { return `${prev},${curr}`; });
        paramValue.trimEnd();
+       preparedUrl += `${urlParamsKey}=${paramValue.trimEnd()}`;
       }
       else {
         preparedUrl += `${urlParamsKey}=${queryParams[urlParamsKey]}`;
