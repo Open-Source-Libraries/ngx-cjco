@@ -1,0 +1,25 @@
+{
+  "environments" : [
+    {
+      "name": "no-context-domain",
+      "domain": "http://localhost:4300",
+      "versioningScheme": "url",
+      "contexts": [
+      ]
+    }
+  ],
+  "contexts": [
+    {
+      "name": "no-context-domain",
+      "versioningScheme": "url",
+      "endpoints": [
+        {
+        "resource": "fake",
+        "url": "fake/:id"
+        }
+      ]
+    }
+  ],
+  "resourceEnvironment": "no-context-domain"
+}
+  

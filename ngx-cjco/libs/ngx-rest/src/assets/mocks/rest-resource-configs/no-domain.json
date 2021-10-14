@@ -1,0 +1,11 @@
+{
+  "environments" : [
+    {
+      "name": "no-domain",
+      "versioningScheme": "url",
+      "contexts": []
+    }
+  ],
+  "contexts": [],
+  "resourceEnvironment": "no-domain"
+}

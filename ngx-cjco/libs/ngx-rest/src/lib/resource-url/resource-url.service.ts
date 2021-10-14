@@ -46,40 +46,27 @@ export class ResourceUrlService {
       throw new Error(`Environment is undefined for ${this.resourceConfig.resourceEnvironment}`);
     }
 
-    if (!runningEnvironment?.domain) {
+    const environmentDomainUrl = runningEnvironment?.domain;
+
+    if (!environmentDomainUrl) {
       configLoadErrors.push(`Environment must have a domain in Environment ${this.resourceConfig.resourceEnvironment}`);
     }
-
-    // Validate the endpoints configuration.
-    this.endpointConfigs.forEach((endpoint: RestResourceEndpoint) => {
-      if (endpoint.resource === null) {
-        configLoadErrors.push(`Configuration does not declare the resource`);
-      }
-
-      if (endpoint.url === null) {
-        configLoadErrors.push(`Endpoints must specify the URL. Endpoint definition invalid for resource ${endpoint.resource}`);
-      }
-
-      if (endpoint.url.includes('://') || endpoint.url.includes('.')) {
-        configLoadErrors.push(`Endpoint URL should not include the domain for Resource ${endpoint.resource}`);
-      }
-
-      if (endpoint.versions === null && runningEnvironment.versions === null) {
-        configLoadErrors.push(`Endpoints must specify version explicitly if not defined in environment. Endpoint definition invalid for resource ${endpoint.resource}`);
-      }
-    });
 
     if (configLoadErrors.length > 0) {
       throw new Error(`Resource Config Loading Exception \n ${configLoadErrors.toString().replace(',', '\n')}`);
     }
 
-    const environmentDomainUrl = runningEnvironment.domain;
-
     // Load the general endpoint section.
     this.resourceConfig.contexts.map((context: RestResourceContext) => {
       context.endpoints.forEach((endpoint: RestResourceEndpoint) => {
-        if (environmentDomainUrl === null && context.domain === null) {
-          configLoadErrors.push(`Error loading general endpoints. Context must have a baseUrl for Context ${context.name}`);
+        this.validateEndpoint(runningEnvironment, endpoint, configLoadErrors);
+
+        if (!context.domain) {
+          configLoadErrors.push(`Error loading general endpoints. Context must have a domain for Context ${context.name}`);
+        }
+
+        if (configLoadErrors.length > 0) {
+          throw new Error(`Resource Config Loading Exception \n ${configLoadErrors.toString().replace(',', '\n')}`);
         }
 
         const endpointUrl = `${context.domain || environmentDomainUrl}/${endpoint.url}`
@@ -90,7 +77,8 @@ export class ResourceUrlService {
           identifierScheme: endpoint.identifierScheme || RestIdentifierScheme.Array,
           resource: endpoint.resource,
           url: endpointUrl,
-          versioningScheme: versioningScheme
+          versioningScheme: versioningScheme,
+          versions: endpoint?.versions
         });
       });
     });
@@ -98,19 +86,46 @@ export class ResourceUrlService {
     // Overwrite or add any environment specific endpoints.
     runningEnvironment.contexts.map((context: RestResourceContext) => {
       context.endpoints.forEach((endpoint: RestResourceEndpoint) => {
+        this.validateEndpoint(runningEnvironment, endpoint, configLoadErrors);
+
+        if (configLoadErrors.length > 0) {
+          throw new Error(`Resource Config Loading Exception \n ${configLoadErrors.toString().replace(',', '\n')}`);
+        }
+
         const existing = this.endpointConfigs.findIndex(x => x.resource === endpoint.resource);
-        if (existing) {
+        if (existing !== -1) {
           this.endpointConfigs.splice(existing, 1);
         }
 
         const endpointUrl = `${context.domain || environmentDomainUrl}/${endpoint.url}`
         this.endpointConfigs.push({
-          identifierScheme: endpoint.identifierScheme,
+          identifierScheme: endpoint.identifierScheme || RestIdentifierScheme.Array,
           resource: endpoint.resource,
           url: endpointUrl,
-          versioningScheme: endpoint.versioningScheme || context.versioningScheme || runningEnvironment.versioningScheme
+          versioningScheme: endpoint.versioningScheme || context.versioningScheme || runningEnvironment.versioningScheme,
+          versions: endpoint?.versions
         });
       })
     });
+  }
+
+  private validateEndpoint(
+    runningEnvironment: RestResourceEnvironment,
+    endpoint: RestResourceEndpoint,
+    configLoadErrors: string[]
+  ) : void {
+    if (!endpoint.resource) {
+      configLoadErrors.push(`Configuration does not declare the resource`);
+    }
+
+    if (!endpoint.url) {
+      configLoadErrors.push(`Endpoints must specify the URL. Endpoint definition invalid for resource ${endpoint.resource}`);
+    } else if (endpoint.url.includes('://') || endpoint.url.includes('.')) {
+      configLoadErrors.push(`Endpoint URL should not include the domain for Resource ${endpoint.resource}`);
+    }
+
+    if (!endpoint.versions && !runningEnvironment.versions) {
+      configLoadErrors.push(`Endpoints must specify version explicitly if not defined in environment. Endpoint definition invalid for resource ${endpoint.resource}`);
+    }
   }
 }

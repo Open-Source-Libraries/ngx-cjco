@@ -1,0 +1,24 @@
+{
+  "environments" : [
+    {
+      "name": "no-resource",
+      "domain": "http://localhost:4300",
+      "versioningScheme": "url",
+      "contexts": [
+        {
+          "name": "no-resource",
+          "domain": "http://localhost:4300",
+          "versioningScheme": "url",
+          "endpoints": [
+            {
+              "resource": "",
+              "url": "resources/:id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "contexts": [],
+  "resourceEnvironment": "no-resource"
+}
