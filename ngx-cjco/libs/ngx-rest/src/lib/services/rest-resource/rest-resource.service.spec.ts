@@ -258,6 +258,24 @@ import {
           fakeResponse.flush({});
         });
       })
+
+      //Need to create another mock URL service to test this and override providers methods
+      describe('identifier param', () => {
+       it('should append the identifier params for Array identifier from options', () => {
+         const options : RestRequestOptions<Fake> = {
+           identifierParams: ['id']
+         };
+
+         service.list(options).subscribe(response => {
+           expect(response).toBeTruthy();
+         });
+
+         const fakeResponse = httpMock.expectOne(`http://test-service.com/fake/id`);
+ 
+         expect(fakeResponse.request.method).toBe(RestVerb.Get);
+         fakeResponse.flush({});
+       });
+     })
     });
   });
   
