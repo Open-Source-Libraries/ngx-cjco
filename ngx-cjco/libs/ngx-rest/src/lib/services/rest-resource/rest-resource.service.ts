@@ -49,11 +49,11 @@ export abstract class RestResourceService<
 
   public read(id?: IdType, options?: RestRequestOptions<T>): Observable<T | T[]> {
     const preparedUrl = this.prepareUrl(id, options);
-    this.resourceInstance = new this.type() as T;
+    // this.resourceInstance = new this.type() as T;
 
-    if (this.resourceInstance === undefined) {
-      return of();
-    }
+    // if (this.resourceInstance === undefined) {
+    //   return of();
+    // }
 
     // TODO: Take into account the different versioning schemes.
     return this.httpClient.get<T>(preparedUrl).pipe(
@@ -136,7 +136,7 @@ export abstract class RestResourceService<
       }
 
       const value = `${identifiers[index]}`;
-      preparedUrl.replace(index, value);
+      preparedUrl = preparedUrl.replace(index, value);
     }
 
     return preparedUrl;
