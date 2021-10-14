@@ -116,13 +116,11 @@ describe('ResourceUrlService', () => {
       const endpointConfig = sut.getEndpoint('fakeChild');
       const expectedUrl = 'http://localhost:4300/fake/:id/fakeChild/:id';
 
-      console.table(endpointConfig);
-
       expect(endpointConfig).toBeTruthy();
       expect(endpointConfig.resource).toBe('fakeChild');
       expect(endpointConfig.url).toBe(expectedUrl);
       expect(endpointConfig.identifierScheme).toBe(RestIdentifierScheme.Array);
-      expect(endpointConfig.versions).toBe({verb: "PATCH", value: "1.0.0"})
+      expect(endpointConfig.versions).toStrictEqual([{verb: "PATCH", value: "1.0.0"}])
     });
 
     it('should throw an exception when no endpointConfig matches the given resource', () => {
