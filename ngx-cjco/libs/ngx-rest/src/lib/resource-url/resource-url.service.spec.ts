@@ -80,6 +80,31 @@ describe('ResourceUrlService', () => {
         }).toThrow('Endpoints must specify the URL. Endpoint definition invalid for resource no-url');
       });
 
+      describe('when parsing an endpointConfig\'s url', () => {
+        it('should throw and exception when the url contains "://"', () => {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const invalidConfig = require('../../assets/mocks/rest-resource-configs/url-with-delimitter.json');
+          expect(() => {
+            sut = new FakeResourceUrlService({
+              restResourceConfig: invalidConfig,
+              resourceEnvironment: "url-with-delimitter"
+            })
+          }).toThrow('Endpoint URL should not include the domain for Resource url-with-delimitter');
+        });
+
+        it('should throw and exception when the url contains "."', () => {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const invalidConfig = require('../../assets/mocks/rest-resource-configs/url-with-dot.json');
+          expect(() => {
+            sut = new FakeResourceUrlService({
+              restResourceConfig: invalidConfig,
+              resourceEnvironment: "url-with-dot"
+            })
+          }).toThrow('Endpoint URL should not include the domain for Resource url-with-dot');
+        });
+  
+      })
+
       it('should throw an exception when given an endpointConfig with no versions', () => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const invalidConfig = require('../../assets/mocks/rest-resource-configs/no-versions.json');

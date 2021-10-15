@@ -1,0 +1,30 @@
+{
+  "environments" : [
+    {
+      "name": "url-with-dot",
+      "domain": "http://localhost:4300",
+      "versioningScheme": "url",
+      "contexts": [
+        {
+          "name": "url-with-dot",
+          "domain": "http://localhost:4300",
+          "versioningScheme": "url",
+          "endpoints": [
+            {
+              "resource": "url-with-dot",
+              "url": "localhost.com",
+              "versions": [
+                {
+                  "verb": "GET",
+                  "value": "v1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "contexts": [],
+  "resourceEnvironment": "url-with-dot"
+}
