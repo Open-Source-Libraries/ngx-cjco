@@ -46,9 +46,7 @@ export class ResourceUrlService {
       throw new Error(`Environment is undefined for ${this.resourceConfig.resourceEnvironment}`);
     }
 
-    const environmentDomainUrl = runningEnvironment?.domain;
-
-    if (!environmentDomainUrl) {
+    if (!runningEnvironment?.domain) {
       configLoadErrors.push(`Environment must have a domain in Environment ${this.resourceConfig.resourceEnvironment}`);
     }
 
@@ -69,17 +67,7 @@ export class ResourceUrlService {
           throw new Error(`Resource Config Loading Exception \n ${configLoadErrors.toString().replace(',', '\n')}`);
         }
 
-        const endpointUrl = `${context.domain || environmentDomainUrl}/${endpoint.url}`
-        const versioningScheme = endpoint.versioningScheme || context.versioningScheme || runningEnvironment.versioningScheme;
-
-        // TODO: Need to account for versioning for each individual endpoint.
-        this.endpointConfigs.push({
-          identifierScheme: endpoint.identifierScheme || RestIdentifierScheme.Array,
-          resource: endpoint.resource,
-          url: endpointUrl,
-          versioningScheme: versioningScheme,
-          versions: endpoint?.versions
-        });
+        this.addEndpoint(endpoint, context, runningEnvironment);
       });
     });
 
@@ -97,17 +85,28 @@ export class ResourceUrlService {
           this.endpointConfigs.splice(existing, 1);
         }
 
-        const endpointUrl = `${context.domain || environmentDomainUrl}/${endpoint.url}`
-        this.endpointConfigs.push({
-          identifierScheme: endpoint.identifierScheme || RestIdentifierScheme.Array,
-          resource: endpoint.resource,
-          url: endpointUrl,
-          versioningScheme: endpoint.versioningScheme || context.versioningScheme || runningEnvironment.versioningScheme,
-          versions: endpoint?.versions
-        });
+        this.addEndpoint(endpoint, context, runningEnvironment);
       })
     });
   }
+
+  private addEndpoint(
+    endpoint: RestResourceEndpoint,
+    context: RestResourceContext,
+    runningEnvironment: RestResourceEnvironment
+  ) : void {
+    const endpointUrl = `${context.domain || runningEnvironment.domain}/${endpoint.url}`
+    const versioningScheme = endpoint.versioningScheme || context.versioningScheme || runningEnvironment.versioningScheme;
+
+    // TODO: Need to account for versioning for each individual endpoint.
+    this.endpointConfigs.push({
+      identifierScheme: endpoint.identifierScheme || RestIdentifierScheme.Array,
+      resource: endpoint.resource,
+      url: endpointUrl,
+      versioningScheme: versioningScheme,
+      versions: endpoint?.versions
+    });
+  };
 
   private validateEndpoint(
     runningEnvironment: RestResourceEnvironment,
