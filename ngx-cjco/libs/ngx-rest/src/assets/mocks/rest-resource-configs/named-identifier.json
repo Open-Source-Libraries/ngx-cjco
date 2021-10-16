@@ -1,0 +1,88 @@
+{
+    "environments" : [
+      {
+        "name": "local-dev",
+        "domain": "http://localhost:4300",
+        "versioningScheme": "url",
+        "versions": [
+          {
+            "verb": "GET",
+            "value": "v2"
+          }
+        ],
+        "contexts": [
+          {
+            "name": "fake",
+            "domain": "http://localhost:4300",
+            "versioningScheme": "url",
+            "versions": [
+              {
+                "verb": "GET",
+                "value": "v2"
+              }
+            ],
+            "endpoints": [
+              {
+                "resource": "fakeChild",
+                "url": "fake/:id/fakeChild/:id",
+                "versions": [
+                  {
+                    "verb": "PATCH",
+                    "value": "1.0.0"
+                  }
+                ],
+                "identifierScheme": "named"
+              }
+            ]
+          },
+          {
+            "name": "new-context",
+            "domain": "http://localhost:4300",
+            "versioningScheme": "header",
+            "endpoints": [
+              {
+                "resource": "items",
+                "url": "items/:uuid",
+                "versions": [
+                  {
+                    "verb": "GET",
+                    "value": "v3"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "name": "remote-dev",
+        "domain": "http://localhost:4300",
+        "versioningScheme": "url",
+        "versions": [
+          {
+            "verb": "GET",
+            "value": "v1"
+          }
+        ],
+        "endpoints": [
+          {
+            "resource": "fakeChild",
+            "url": "fake/:id"
+          },
+          {
+            "resource": "notOverrided",
+            "url": "notOverrided/:id",
+            "versions": [
+              {
+                "verb": "POST",
+                "value": "2.1"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "resourceEnvironment": "local-dev"
+  }

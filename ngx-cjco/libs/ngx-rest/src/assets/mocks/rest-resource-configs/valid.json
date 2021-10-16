@@ -38,16 +38,16 @@
           "name": "new-context",
           "domain": "http://localhost:4300",
           "versioningScheme": "header",
-          "versions": [
-            {
-              "verb": "GET",
-              "value": "v3"
-            }
-          ],
           "endpoints": [
             {
               "resource": "items",
-              "url": "items/:uuid"
+              "url": "items/:uuid",
+              "versions": [
+                {
+                  "verb": "GET",
+                  "value": "v3"
+                }
+              ]
             }
           ]
         }

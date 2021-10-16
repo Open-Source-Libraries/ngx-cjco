@@ -268,7 +268,6 @@ import {
 
   });
 
-      //Need Describes for named identifier
   describe('named identifier', () => {
 
     let httpMock: HttpTestingController;
@@ -317,7 +316,6 @@ import {
 
   })
 
-  //Need describe for Array identifier
   describe('identifier param', () => {
 
     let httpMock: HttpTestingController;

@@ -130,14 +130,13 @@ describe('ResourceUrlService', () => {
   });
 
   describe('when calling getEndpoint', () => {
-    beforeEach(() => {
-      sut = new FakeResourceUrlService({
+    it('should return the correct endpointConfig matching the given resource', () => {
+
+      const sut = new FakeResourceUrlService({
         restResourceConfig: validConfig,
         resourceEnvironment: resourceEnvironment
       });
-    });
 
-    it('should return the correct endpointConfig matching the given resource', () => {
       const endpointConfig = sut.getEndpoint('fakeChild');
       const expectedUrl = 'http://localhost:4300/fake/:id/fakeChild/:id';
 
@@ -149,9 +148,76 @@ describe('ResourceUrlService', () => {
     });
 
     it('should throw an exception when no endpointConfig matches the given resource', () => {
+
+      const sut = new FakeResourceUrlService({
+        restResourceConfig: validConfig,
+        resourceEnvironment: resourceEnvironment
+      });
+
       expect(() => {
         sut.getEndpoint('doesNotExist');
       }).toThrow('Endpoint not configured for Resource doesNotExist');
+    });
+
+    it('should return the correct endpointConfig matching the given resource with Named identifier', () => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const validConfig: RestResourceConfig = require('../../assets/mocks/rest-resource-configs/named-identifier.json');
+      const resourceEnvironment = "local-dev";
+
+      const sut = new FakeResourceUrlService({
+        restResourceConfig: validConfig,
+        resourceEnvironment: resourceEnvironment
+      });
+
+      const endpointConfig = sut.getEndpoint('fakeChild');
+      const expectedUrl = 'http://localhost:4300/fake/:id/fakeChild/:id';
+
+      expect(endpointConfig).toBeTruthy();
+      expect(endpointConfig.resource).toBe('fakeChild');
+      expect(endpointConfig.url).toBe(expectedUrl);
+      expect(endpointConfig.identifierScheme).toBe(RestIdentifierScheme.Named);
+      expect(endpointConfig.versions).toStrictEqual([{verb: "PATCH", value: "1.0.0"}])
+    });
+
+    it('should return the correct endpointConfig matching the given resource with General context', () => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const validConfig: RestResourceConfig = require('../../assets/mocks/rest-resource-configs/valid.json');
+      const resourceEnvironment = "local-dev";
+
+      const sut = new FakeResourceUrlService({
+        restResourceConfig: validConfig,
+        resourceEnvironment: resourceEnvironment
+      });
+
+      const endpointConfig = sut.getEndpoint('notOverrided');
+      const expectedUrl = 'http://localhost:4300/notOverrided/:id';
+
+      expect(endpointConfig).toBeTruthy();
+      expect(endpointConfig.resource).toBe('notOverrided');
+      expect(endpointConfig.url).toBe(expectedUrl);
+      expect(endpointConfig.identifierScheme).toBe(RestIdentifierScheme.Array);
+      expect(endpointConfig.versions).toStrictEqual([{verb: "POST", value: "2.1"}])
+    });
+
+    it('should return the correct endpointConfig matching the given resource with New-context', () => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const validConfig: RestResourceConfig = require('../../assets/mocks/rest-resource-configs/valid.json');
+      const resourceEnvironment = "local-dev";
+
+      const sut = new FakeResourceUrlService({
+        restResourceConfig: validConfig,
+        resourceEnvironment: resourceEnvironment
+      });
+
+      const endpointConfig = sut.getEndpoint('items');
+      const expectedUrl = 'http://localhost:4300/items/:uuid';
+
+      expect(endpointConfig).toBeTruthy();
+      expect(endpointConfig.resource).toBe('items');
+      expect(endpointConfig.url).toBe(expectedUrl);
+      expect(endpointConfig.identifierScheme).toBe(RestIdentifierScheme.Array);
+      expect(endpointConfig.versioningScheme).toBe('header');
+      expect(endpointConfig.versions).toStrictEqual([{verb: "GET", value: "v3"}])
     });
   });
 
